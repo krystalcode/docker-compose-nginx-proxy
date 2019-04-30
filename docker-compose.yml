@@ -1,0 +1,51 @@
+version: '3.7'
+
+services:
+
+  nginx:
+    # Build.
+    image: jwilder/nginx-proxy:alpine
+
+    # Run.
+    container_name: proxy_nginx
+
+    # Configure.
+    networks:
+      - proxy-tier
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - ./certs:/etc/nginx/certs:ro
+      - ./htpasswd:/etc/nginx/htpasswd:ro
+      - nginx-html:/usr/share/nginx/html
+      - nginx-vhost:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+  lets_encrypt:
+    # Build.
+    image: jrcs/letsencrypt-nginx-proxy-companion
+
+    # Run.
+    container_name: proxy_lets_encrypt
+
+    # Configure.
+    environment:
+      - NGINX_PROXY_CONTAINER=proxy_nginx
+
+    volumes:
+      - ./certs:/etc/nginx/certs:rw
+      - nginx-html:/usr/share/nginx/html
+      - nginx-vhost:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+volumes:
+  nginx-html:
+  nginx-vhost:
+
+networks:
+  proxy-tier:
+    external:
+      name: nginx-proxy
