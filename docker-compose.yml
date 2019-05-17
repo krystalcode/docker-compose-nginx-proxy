@@ -9,6 +9,8 @@ services:
     # Run.
     container_name: proxy_nginx
 
+    restart: unless-stopped
+
     # Configure.
     networks:
       - proxy-tier
@@ -30,6 +32,8 @@ services:
 
     # Run.
     container_name: proxy_lets_encrypt
+
+    restart: unless-stopped
 
     # Configure.
     environment:
