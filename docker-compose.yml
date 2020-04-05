@@ -4,7 +4,11 @@ services:
 
   nginx:
     # Build.
-    image: jwilder/nginx-proxy:alpine
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile-nginx
+
+    image: proxy_nginx
 
     # Run.
     container_name: proxy_nginx
