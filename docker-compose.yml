@@ -5,7 +5,7 @@ services:
   nginx:
     # Build.
     build:
-      context: ./proxy
+      context: .
       dockerfile: Dockerfile-nginx
 
     image: proxy_nginx
